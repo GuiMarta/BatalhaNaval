@@ -2,11 +2,9 @@ package BatalhaNaval;
 import  java.util.Scanner;
 import java.util.Random;
 import java.util.Arrays;
+import java.util.Locale;
 
 public class MainCode {
-
-    //int [][] tabuleiro = new int[10][10];
-    //int [][] tabuleiroAdversario = new int [10][10];
 
     public static final int TM_TABULEIRO = 10;
     public static char [][] board;
@@ -32,18 +30,16 @@ public class MainCode {
 
             startGame();
             configTabuleiro();
-
-
+            printTabuleiro();
 
     }
 
     //===========================================================
 
     public static void startGame() { //printa o tabuleiro com os caracteres
-        System.out.printf("Batalha naval da Maria e do Marta.\n O tabuleiro está sendo iniciiado, aguarde!");
+        System.out.printf("Bem vindo ao tabuleiro Java\n");
 
     }
-
 
     public static void configTabuleiro() {
         board = new char[TM_TABULEIRO][TM_TABULEIRO];
@@ -52,43 +48,74 @@ public class MainCode {
         }
 
     }
+    //===========================================================
 
+    public static void printRow(char[] tab) {
+        for (int i = 0; i < tab.length; i++) {
+            if (tab[i] == 'o') {
+                System.out.print("y ");
+            } else {
+                System.out.print(tab[i] + " ");
+            }
+        }
+        System.out.println(); // Adicione esta linha para imprimir uma nova linha no final de cada linha.
+    }
+    public static void printTabuleiro() {
+        for (int i = 0; i < TM_TABULEIRO; i++) {
+            System.out.print((char) (i + 65) + " | "); // Adicione um espaço após a identificação da linha.
+            printRow(board[i]);
+        }
+        printBottomLineBoard();
+    }
+    public static void printBottomLineBoard() {
 
+        System.out.print("    ");
+        for (int i = 0; i < TM_TABULEIRO; i++) {
+            System.out.print((i + 1) + " ");
+        }
+        System.out.println();
+    }
 
 
     //===========================================================
-    public static void colocarNavio01(int x, int y, boolean naLinha){
-        for (int k = x; k < (x + TM_NAVIO_1); k++){
-            if(naLinha)
-                board[y][k] = 'o';
-            else
-                board[k][y] = 'o';
+    public static void colocarNavio01(int i, int j, boolean naLinha) {
+        if (naLinha) {
+            board[i][j] = 'o';
+        } else {
+            board[j][i] = 'o';
         }
     }
-    public static void colocarNavio02(int x, int y, boolean naLinha){
-        for (int k = x; k < (x + TM_NAVIO_2); k++){
-            if(naLinha)
-                board[y][k] = 'o';
-            else
-                board[k][y] = 'o';
+
+    public static void colocarNavio02(int i, int j, boolean naLinha) {
+        for (int k = i; k < i + TM_NAVIO_2; k++) {
+            if (naLinha) {
+                board[k][j] = 'o';
+            } else {
+                board[j][k] = 'o';
+            }
         }
     }
-    public static void colocarNavio03(int x, int y, boolean naLinha){
-        for (int k = x; k < (x+ TM_NAVIO_3); k++){
-            if(naLinha)
-                board[y][k] = 'o';
-            else
-                board[k][y] = 'o';
+
+    public static void colocarNavio03(int i, int j, boolean naLinha) {
+        for (int k = i; k < i + TM_NAVIO_3; k++) {
+            if (naLinha) {
+                board[k][j] = 'o';
+            } else {
+                board[j][k] = 'o';
+            }
         }
     }
-    public static void colocarNavio04(int x, int y, boolean naLinha){
-        for (int k = x; k < (x+ TM_NAVIO_4); k++){
-            if(naLinha)
-                board[y][k] = 'o';
-            else
-                board[k][y] = 'o';
+
+    public static void colocarNavio04(int i, int j, boolean naLinha) {
+        for (int k = i; k < i + TM_NAVIO_4; k++) {
+            if (naLinha) {
+                board[k][j] = 'o';
+            } else {
+                board[j][k] = 'o';
+            }
         }
     }
+
     //===========================================================
     public static void alocarNavios() {
         Random random = new Random();
@@ -109,18 +136,17 @@ public class MainCode {
     private static int qntNavioJaAlocado1 = 0;
 
 
-    public static boolean conferirNavio(int i , int j) {
-
+    public static boolean conferirNavio(int i, int j) {
         // Para o navio de 4 lugares
         if (qntNavioJaAlocado4 < NAVIO4_QNT) {
             if (j + TM_NAVIO_4 <= TM_TABULEIRO) {
                 if (!navioNaColuna4(i, j)) {
-                    colocarNavio04(i,j, false);
+                    colocarNavio04(i, j, false);
                     qntNavioJaAlocado4++;
                     return true;
                 }
             } else if (i + TM_NAVIO_4 <= TM_TABULEIRO) {
-                if (!navioNaLinha(i, j)) {
+                if (!navioNaLinha4(i, j)) {
                     colocarNavio04(i, j, true);
                     qntNavioJaAlocado4++;
                     return true;
@@ -137,7 +163,7 @@ public class MainCode {
                     return true;
                 }
             } else if (i + TM_NAVIO_3 <= TM_TABULEIRO) {
-                if (!navioNaLinha(i, j)) {
+                if (!navioNaLinha3(i, j)) {
                     colocarNavio03(i, j, true);
                     qntNavioJaAlocado3++;
                     return true;
@@ -154,7 +180,7 @@ public class MainCode {
                     return true;
                 }
             } else if (i + TM_NAVIO_2 <= TM_TABULEIRO) {
-                if (!navioNaLinha(i, j)) {
+                if (!navioNaLinha2(i, j)) {
                     colocarNavio02(i, j, true);
                     qntNavioJaAlocado2++;
                     return true;
@@ -171,7 +197,7 @@ public class MainCode {
                     return true;
                 }
             } else if (i + TM_NAVIO_1 <= TM_TABULEIRO) {
-                if (!navioNaLinha(i, j)) {
+                if (!navioNaLinha1(i, j)) {
                     colocarNavio01(i, j, true);
                     qntNavioJaAlocado1++;
                     return true;
@@ -256,19 +282,6 @@ public class MainCode {
         }
         return contarBarcos;
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
