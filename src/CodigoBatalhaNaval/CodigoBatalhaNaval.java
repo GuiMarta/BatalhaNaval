@@ -29,7 +29,7 @@ public class CodigoBatalhaNaval{
         ler.close();
     }
     //========================================================//========================================================
-    public static char[][] criarMapa() { // criando mapa de matriz 10x10
+    public static char[][] criarMapa() { // // cria e preenche a matrix com hifen -
         char[][] mapa = new char[10][10];
 
         for (int i = 0; i < 10; i++) {
@@ -41,7 +41,7 @@ public class CodigoBatalhaNaval{
         return mapa;
     }
     //========================================================//========================================================
-    public static void colocarNavio(char[][] mapa, int linha, int coluna, int comprimento, boolean vertical) {
+    public static void colocarNavio(char[][] mapa, int linha, int coluna, int comprimento, boolean vertical) { //aloca os navios
         if (verificaPosicao(mapa, linha, coluna, comprimento, vertical)) { //passou como vdd pelo verificaposicao e caí dentro do if
             if (vertical) {
                 for (int i = 0; i < comprimento; i++) {
@@ -57,7 +57,7 @@ public class CodigoBatalhaNaval{
         }
     }
     //========================================================//========================================================
-    public static void colocarBarcoAutomatico(char[][] mapa) {
+    public static void colocarBarcoAutomatico(char[][] mapa) { // gera números aleatórios para locação automatica do computador (posição)
         Random random = new Random();
 
         // Colocar um navio de 4 posições aleatóriamente
@@ -79,7 +79,8 @@ public class CodigoBatalhaNaval{
         }
     }
     //========================================================//========================================================
-    public static boolean verificaPosicao(char[][] mapa, int linha, int coluna, int comprimento, boolean vertical) {
+    public static boolean verificaPosicao(char[][] mapa, int linha, int coluna, int comprimento, boolean vertical) { 
+        // verifica se as coordenadas geradas aleatorias respitam a matrix e se sobrepõem sobre outros barcos
 
         if (vertical) { //computador tenta alocar na horizontal
             if (linha + comprimento > mapa.length) {
@@ -104,23 +105,23 @@ public class CodigoBatalhaNaval{
         return true; //verifica a posição e se saí como true deixa alocar o navio (boolean vertical)
     }
     //========================================================//========================================================
-    public static void jogarContraComputador(char[][] mapaJogadorA, char[][] mapaJogadorB) {
+    public static void jogarContraComputador(char[][] mapaJogadorA, char[][] mapaJogadorB) { 
         Scanner ler = new Scanner(System.in);
         Random aleatorio = new Random();
         System.out.println(" ");
         System.out.println("Jogo contra o computador!\n Seu objetivo é afundar todos os navios\n A - água\n K - Návio");
         System.out.println("-------------------------");
         System.out.println("Informe seu nome: ");
-        String nome = ler.nextLine();
+        String nome = ler.nextLine(); // inicio da partida
 
         colocarBarcoAutomatico(mapaJogadorA);
-        colocarBarcoAutomatico(mapaJogadorB);
+        colocarBarcoAutomatico(mapaJogadorB);//alocar barcos com as funções de cima
 
         boolean vezJogadorA = true;
         boolean finalJogo = false;
 
-        while (!finalJogo) {
-            if (vezJogadorA) {
+        while (!finalJogo) { 
+            if (vezJogadorA) { //começa em true
                 System.out.println(" " + nome + " sua vez de atirar!");
 
                 mostrarMapa(mapaJogadorB);
@@ -131,9 +132,10 @@ public class CodigoBatalhaNaval{
                 int linha = ler.nextInt();
                 ler.nextLine();
 
-                int coluna = colunaStr.charAt(0) - 'A';
+                int coluna = colunaStr.charAt(0) - 'A'; // converte a letra para um número da coluna correspondente 
 
-                if (mapaJogadorB[linha][coluna] == '-' || mapaJogadorB[linha][coluna] == 'K') { //se jogar e cair como agua ou tentar atirar em algum lugar ja atirado
+                if (mapaJogadorB[linha][coluna] == '-' || mapaJogadorB[linha][coluna] == 'K') { 
+                    //se jogar e cair como agua ou tentar atirar em algum lugar ja atirado
                     if (mapaJogadorB[linha][coluna] == '-') {
                         System.out.println("Água!");
                         mapaJogadorB[linha][coluna] = 'A';
@@ -141,38 +143,39 @@ public class CodigoBatalhaNaval{
                         System.out.println("Você já atirou nessa posição!");
                     }
 
-                    vezJogadorA = false;
+                    vezJogadorA = false; //perde a vez
                 } else if (mapaJogadorB[linha][coluna] == 'B') { // se jogar e cair em cima do navio adversario
-                    System.out.println("Você acertou um barco!");
+                    System.out.println("Você acertou um barco!");//bolleano jogadorA volta como true e joga de novo
                     mapaJogadorB[linha][coluna] = 'K';
 
                     if (barcosAfundados(mapaJogadorB)) {
                         System.out.println("Parabéns, você venceu!");
-                        finalJogo = true;
+                        finalJogo = true; //verificar se acertou todos os navios
                     }
                 }
             } else {
-                System.out.println("Agora é a vez do computador:");
+                System.out.println("Agora é a vez do computador:"); //jogadorA ficou falso
 
                 int linha = aleatorio.nextInt(10);
                 int coluna = aleatorio.nextInt(10);
 
-                if (mapaJogadorA[linha][coluna] == '-' || mapaJogadorA[linha][coluna] == 'K') {
+                if (mapaJogadorA[linha][coluna] == '-' || mapaJogadorA[linha][coluna] == 'K') { 
+                    //se acertou agua ou jogou na mesma posição
                     if (mapaJogadorA[linha][coluna] == '-') {
-                        System.out.println("Água!!!");
+                        System.out.println("Água!");
                         mapaJogadorA[linha][coluna] = 'A';
                     } else {
                         System.out.println("O computador já atirou nessa posição!");
                     }
-
-                    vezJogadorA = true;
+                    vezJogadorA = true; // perde a vez volta para jogadorA
+                    
                 } else if (mapaJogadorA[linha][coluna] == 'B') {
                     System.out.println("O computador acertou um barco!");
-                    mapaJogadorA[linha][coluna] = 'K';
+                    mapaJogadorA[linha][coluna] = 'K'; //marca o K se acertar o navio
 
                     if (barcosAfundados(mapaJogadorA)) {
                         System.out.println("O computador venceu!");
-                        finalJogo = true;
+                        finalJogo = true; //se todos forem afundados ganhou e retorna como vdd
                     }
                 }
             }
@@ -181,7 +184,7 @@ public class CodigoBatalhaNaval{
 
     }
     //========================================================//========================================================
-    public static void jogarContraJogador(char[][] mapaJogadorA, char[][] mapaJogadorB, Scanner ler) {
+    public static void jogarContraJogador(char[][] mapaJogadorA, char[][] mapaJogadorB, Scanner ler) { //para jogar contrar jogador
 
         System.out.println(" ");
         System.out.println("   Jogo contra Jogador! \n Seu objetivo é afundar todos os navios\n A - água\n K - Návio  ");
@@ -190,50 +193,51 @@ public class CodigoBatalhaNaval{
         System.out.println("Informe o nome dos jogadores.\n Jogador A:");
         String jogadorA = ler.nextLine();
         System.out.println("\n Jogador B:");
-        String jogadorB = ler.nextLine();
+        String jogadorB = ler.nextLine(); //inicializando jogo
 
         System.out.println(jogadorA + " Alocar seus barcos!");
 
-       colocarBarcos(mapaJogadorA, ler);
+       colocarBarcos(mapaJogadorA, ler); //chama a função colocarBarco para o Mapa A
 
         System.out.println(jogadorB + " Alocar seus barcos!");
 
-        colocarBarcos(mapaJogadorB, ler);
+        colocarBarcos(mapaJogadorB, ler);// chama a função colocar para o Mapa b //ambos jogadors alocar seus barcos
 
-        boolean vezJogadorA = false;
+        boolean vezJogadorA = true;
         boolean finalJogo = false;
 
-        while (!finalJogo) {
-            if (vezJogadorA) {
+        while (!finalJogo) { 
+            if (vezJogadorA) { //inicia com o jogador A como vdd
                 System.out.println("\n"+jogadorA+", sua vez de atirar:");
 
-                mostrarMapa(mapaJogadorB);
+                mostrarMapa(mapaJogadorB); 
 
                 System.out.print("Informe a letra da coluna para atirar (A-J): ");
                 String colunaStr = ler.nextLine();
                 System.out.print("Informe o número da linha para atirar (0-9): ");
                 int linha = ler.nextInt();
-                ler.nextLine();
-                int coluna = colunaStr.charAt(0) - 'a';
+                ler.nextLine(); //informando onde atirar
+                int coluna = colunaStr.charAt(0) - 'a'; //transformando a letra em numero pela tabela ascii
 
 
                 if (mapaJogadorB[linha][coluna] == '-' || mapaJogadorB[linha][coluna] == 'K') {
+                    // caso caia em agua ou alguma posição repetida
                     if (mapaJogadorB[linha][coluna] == '-') {
                         System.out.println("Água!");
                         mapaJogadorB[linha][coluna] = 'A';
                     } else {
                         System.out.println("Você já atirou nessa posição!");
                     }
-                    vezJogadorA = false;
+                    vezJogadorA = false; // forçar perder a vez
                 }
 
-                else if (mapaJogadorB[linha][coluna] == 'B') {
+                else if (mapaJogadorB[linha][coluna] == 'B') { //caso acerte um navio
 
                     System.out.println("Você acertou um barco!");
                     mapaJogadorB[linha][coluna] = 'K';
 
                     if (barcosAfundados(mapaJogadorB)) {
-                        System.out.println(jogadorA+" venceu!!!");
+                        System.out.println(jogadorA+" venceu!"); //derrubou todos os navios
                         finalJogo = true;
                     }
 
@@ -278,27 +282,27 @@ public class CodigoBatalhaNaval{
     }
 
     //========================================================//========================================================
-    public static void colocarBarcos(char[][] mapa, Scanner ler) {
-        int[] tamanhos = {4, 3, 3, 2, 2, 2, 1, 1, 1, 1};
+    public static void colocarBarcos(char[][] mapa, Scanner ler) { //alocar os barcos manualmente
+        int[] tamanhos = {4, 3, 3, 2, 2, 2, 1, 1, 1, 1}; //vetor com otamaho de cada barco e suas quantidades
 
-        for (int tamanho : tamanhos) {
+        for (int tamanho : tamanhos) { //percorre todos do vetor
 
-            boolean alocado = false;
+            boolean alocado = false; //se não for alocado não saí do while (repetindo)
 
             while (!alocado) {
 
                 System.out.print("Digite a posição inicial (coluna letra + linha número) para o barco de tamanho " + tamanho + ": ");
-                String posicao = ler.nextLine();
+                String posicao = ler.nextLine(); //digitar posições
 
-                char letraColuna = posicao.charAt(0);
-                int linha = Integer.parseInt(posicao.substring(1));
+                char letraColuna = posicao.charAt(0); //aramzena a letra
+                int linha = Integer.parseInt(posicao.substring(1)); // pega o segundo a segunda posição da string para armazenar apenas o número
 
                 int coluna = letraColuna - 'a';   // Calculo responsavel por entregar a difernça de A (na tabela
                 // ASCII)  para representar a conversão em numeros
 
 
                 System.out.print("Digite a orientação (H - horizontal, V - vertical) para o barco de tamanho " + tamanho + ": ");
-                String orientacao = ler.nextLine().toUpperCase();
+                String orientacao = ler.nextLine().toUpperCase(); //escolher se o navio alocado é na vertical ou horizontal
 
 
                 if (orientacao.equals("H")) {  //  Caso o usuario decida alocar na orientação horizontal
@@ -314,9 +318,9 @@ public class CodigoBatalhaNaval{
                         if (espacoDisponivel) {
                             for (int i = coluna; i < coluna + tamanho; i++) {
                                 mapa[linha][i] = 'B'; // Substitui os caracteres do mapa pelo tamanho do barco
-                            }
+                            } //se estiver no espaço diponível é alocado
                             System.out.println("Barco alocado com sucesso!");
-                            alocado = true;
+                            alocado = true; //retorna ao while permitindo-o avançar para o proximo item do vetor
 
                         }
                         else {
@@ -324,7 +328,7 @@ public class CodigoBatalhaNaval{
                         }
                     }
                     else {
-                        System.out.println("Não é possível alocar o barco nessa posição. Tente novamente.");
+                        System.out.println("Não é possível alocar o barco nessa posição pois exede os limites do mapa. Tente novamente.");
                     }
 
                 }
@@ -373,7 +377,7 @@ public class CodigoBatalhaNaval{
     }
 
     //========================================================//========================================================
-    public static void mostrarMapa(char[][] mapa) {
+    public static void mostrarMapa(char[][] mapa) { //retorna o mapa com os navios alocados escondidos
         System.out.println("  A B C D E F G H I J ");
 
 
@@ -395,7 +399,7 @@ public class CodigoBatalhaNaval{
         System.out.println();
 
     }
-    public static void mostrarMapaComTabuleiro(char[][] mapa) {
+    public static void mostrarMapaComTabuleiro(char[][] mapa) { //retorna o mapa com os navis alocais visiveis
         System.out.println("  A B C D E F G H I J ");
 
 
